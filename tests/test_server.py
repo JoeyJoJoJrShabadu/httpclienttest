@@ -1,6 +1,6 @@
 import unittest
 import requests
-
+from pprint import pprint
 from httpclienttest import HttpTests, Singleton, add_route, add_routes, delete_route, start_http
 from httpclienttest.httpserver import LIST, CLEAR, GETROUTE, LAST
 
@@ -143,7 +143,7 @@ class HttpTestDecorators(unittest.TestCase):
         self.assertEqual(resp.status_code, 200, 'route was not added')
         
         last_call = self.last_func()
-        self.assertEqual(last_call['urlparts']['path'], '/test2')
+        self.assertIn( '/test2', last_call['urlparts'])
     
     @add_routes({'/test2': {'GET': None},
                  '/test3': {'GET': 'Return val'}})
@@ -158,14 +158,14 @@ class HttpTestDecorators(unittest.TestCase):
         resp = requests.get(self.ht.base + '/test2')
         self.assertEqual(resp.status_code, 200, 'route was not added')
         last_call = self.last_func()
-        self.assertEqual(last_call['urlparts']['path'], ['/test2'],
+        self.assertIn('/test2', last_call['urlparts'],
                          'Route not called')
         
     @add_route('/blah2/<param>', 'PUT', dummy)
     def test_decorator_add_method_func(self):
         """Ensure decorator adds function callbacks"""
         last_func = getattr(self.ht, LAST)
-        resp = requests.put(self.ht + '/blah2/12345')
+        resp = requests.put(self.ht.base + '/blah2/12345')
         last_call = last_func()
         self.assertEqual(resp.status_code, 200, 'route was not added')
         self.assertEqual(resp.content, 'dummy')

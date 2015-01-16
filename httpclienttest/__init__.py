@@ -43,12 +43,13 @@ class HttpTests(unittest.TestCase):
     """
     __metaclass__ = Singleton
     
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         """
         Route map should be of format
         {route: {'method': http_method, 'func': function}}
         If function is None then a default function is called
         """
+        #unittest.TestCase.__init__(self, *args, **kwargs)
         self.calls = []
         self.url_map = {}
         self.proc = None
@@ -57,10 +58,9 @@ class HttpTests(unittest.TestCase):
         self.last_call = None
         self.running = False
         
-        self.route_map = {}
         atexit.register(self.stop_server, False)
         
-        self.reset_route_map(route_map)
+        self.reset_route_map({})
     
     def stop_server(self, clean):
         """
@@ -139,8 +139,6 @@ class HttpTests(unittest.TestCase):
         """
         Add a route to the test server
         """
-        print 'MAP NOW - %s' % self.route_map
-        print self
         route = self.route_map.get(path, {})
         route[method] = callback
         self.route_map[path] = route
@@ -252,7 +250,7 @@ def delete_route(path, method='GET'):
         @wraps(func)
         def func_wrapper(self):
             self.ht = HttpTests()
-            exists, del_func = self.ht.delete_route(path, method, function)
+            exists, del_func = self.ht.delete_route(path, method)
             _add_asserts(self)
             
             try:

@@ -89,19 +89,16 @@ class HttpTestServer(multiprocessing.Process):
         http://localhost:12345/clearroute?path=path&method=method
         """
         msg = "Invalid request, requires params ?path=path&method=method"
-        
         try:
             path = bottle.request.params.pop('path')
             method = bottle.request.params.pop('method')
         except KeyError:
             return bottle.HTTPResponse(body=msg, status=400)
-        
         path = '/%s' % path
         
         if self.calls.has_key(path) and self.calls[path].has_key(method):
             self.calls[path].pop(method)
-        
-        return True
+        return
     
     def _clearlist(self):
         """
@@ -197,7 +194,6 @@ class HttpTestServer(multiprocessing.Process):
                         + query_string
         
         resp = requests.get(url)
-        
         if resp.status_code != 200:
             raise TestServerUtilityApiError('clear route API not configured')
         
