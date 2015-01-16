@@ -15,7 +15,7 @@ class DecoratorExampleTest(unittest.TestCase):
         
         requests.get(self.ht.base + '/test')
         
-        self.ht.assert_route_called('/test', method='GET',
+        self.assertRouteCalled('/test', method='GET',
                                     msg="Test route was not called")
         
         
@@ -33,19 +33,19 @@ class DecoratorExampleTest(unittest.TestCase):
         args = {'arg1': '1234', 'arg2': '5678'}
         
         #assert a get request was made to /test
-        self.ht.assert_route_called('/test', method='GET',
+        self.assertRouteCalled('/test', method='GET',
                                     msg="Test route was not called")
         
         #assert two get requests were made to route /test
-        self.ht.assert_count_route_called('/test', 2, method='GET',
+        self.assertCountRouteCalled('/test', 2, method='GET',
                                     msg="Not called 2 times")
         
         #assert correct parameters were provided in last call to /test
-        self.ht.assert_route_call_params('/test', params, method='GET',
+        self.assertLastRouteCallQueryString('/test', params, method='GET',
                                       msg="Incorrect params")
         
         #assert correct arguments provided in call to /test2/<arg1>/<arg2>
-        self.ht.assert_route_call_args('/test2', args, method="POST",
+        self.assertLastRouteCallArguments('/test2', args, method="POST",
                                        msg="Incorrect args")
         
         #Remove a route

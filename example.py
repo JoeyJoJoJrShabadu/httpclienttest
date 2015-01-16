@@ -41,19 +41,19 @@ class ExampleTest(unittest.TestCase):
         args = {'arg1': '1234', 'arg2': '5678'}
         
         #assert a get request was made to /test
-        self.ht.assert_route_called(self.req1, method='GET',
+        self.ht.assertRouteCalled(self.req1, method='GET',
                                     msg="Test route was not called")
         
         #assert two get requests were made to route /test
-        self.ht.assert_count_route_called(self.req1, 2, method='GET',
+        self.ht.assertCountRouteCalled(self.req1, 2, method='GET',
                                     msg="Not called 2 times")
         
         #assert correct parameters were provided in last call to /test
-        self.ht.assert_route_call_params(self.req1, params, method='GET',
+        self.ht.assertLastRouteCallQueryString(self.req1, params, method='GET',
                                       msg="Incorrect params")
         
         #assert correct arguments provided in call to /test2/<arg1>/<arg2>
-        self.ht.assert_route_call_args(self.req2, args, method="POST",
+        self.ht.assertLastRouteCallArguments(self.req2, args, method="POST",
                                        msg="Incorrect args")
         
         #Remove a route
